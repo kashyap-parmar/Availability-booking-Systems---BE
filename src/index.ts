@@ -3,6 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import dotenv from "dotenv";
 import router from "./routes";
+import { connectDB } from "./database";
 
 dotenv.config();
 
@@ -19,6 +20,8 @@ app.use(cors({
     credentials: true,
 }));
 
+/* ---------- Database Connection ---------- */
+connectDB();
 
 /* ---------- Routes ---------- */
 app.use("/api/v1", router);
