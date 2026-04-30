@@ -1,0 +1,37 @@
+{
+  "name": "availability-booking-system",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "nodemon --watch src --ext ts --exec ts-node src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kashyap-parmar/Availability-booking-Systems---BE.git"
+  },
+  "author": "kashyap parmar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kashyap-parmar/Availability-booking-Systems---BE/issues"
+  },
+  "homepage": "https://github.com/kashyap-parmar/Availability-booking-Systems---BE#readme",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "helmet": "^8.1.0",
+    "mongoose": "^9.6.1"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.6.0",
+    "nodemon": "^3.1.14",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^6.0.3"
+  }
+}
