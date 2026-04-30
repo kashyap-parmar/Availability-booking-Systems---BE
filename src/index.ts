@@ -1,9 +1,13 @@
+/// <reference path="./types/express.d.ts" />
 import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import dotenv from "dotenv";
 import router from "./routes";
 import { connectDB } from "./database";
+import { sendResponse } from "./utils/response";
+
+// ------------------------------------------------------------------------
 
 dotenv.config();
 
@@ -11,17 +15,20 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+
 /* ---------- Global Middleware ---------- */
 app.use(express.json()); // parse JSON
 app.use(express.urlencoded({ extended: true })); // parse URL-encoded
 app.use(helmet());
-app.use(cors({
-    origin: process.env.CORS_ORIGIN || "http://localhost:3000",
-    credentials: true,
-}));
+// app.use(cors({
+//     origin: process.env.CORS_ORIGIN || "http://localhost:3000",
+//     credentials: true,
+// }));
+
 
 /* ---------- Database Connection ---------- */
 connectDB();
+
 
 /* ---------- Routes ---------- */
 app.use("/api/v1", router);
@@ -37,8 +44,12 @@ app.use((req: Request, res: Response) => {
 app.use(
     (err: any, req: Request, res: Response, next: NextFunction) => {
         console.error(err); // we can use a logging library instead
-        res.status(err.status || 500).json({
+        return sendResponse({
+            res,
+            status: 'error',
+            statusCode: err.statusCode || 500,
             message: err.message || "Internal Server Error",
+            error: err.errors || err,
         });
     }
 );

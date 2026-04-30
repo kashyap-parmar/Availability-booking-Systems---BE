@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
-import baseFields, { IBaseFields } from "./basefieldsSchema";
+import baseFields, { IBaseFields } from "./basefieldSchema";
 
 // --------------------------------------------------------
 
@@ -44,4 +44,5 @@ const userSchema = new Schema<IUser>({
     ...baseFields
 });
 
-export const User = mongoose.model<IUser>("User", userSchema);
+const User = mongoose.model<IUser>("User", userSchema);
+export default User; 

@@ -1,4 +1,19 @@
 import { Router } from "express";
+import {
+    registerController,
+    loginController,
+    addAvailabilityController,
+    getAvailabilityController,
+    addBookingController,
+    generateLinkController
+} from "./controller";
+import {
+    validateBooking,
+    validateAvailability,
+    validateLogin,
+    validateRegister
+} from "./validations";
+import { authMiddleware } from "./middleware";
 
 // --------------------------------------------
 
@@ -6,9 +21,19 @@ const router = Router();
 
 // --------------------------------------------
 
-router.get("/", (req, res) => {
-    res.json({ message: "This is an example route" });
-});
+// Authentication
+router.post("/register", validateRegister, registerController);
+router.post("/login", validateLogin, loginController);
+
+// Availability routes
+router.post("/availability/user/:id", authMiddleware, validateAvailability, addAvailabilityController);
+router.get("/availability/link/:id", getAvailabilityController);
+
+// generate link
+router.post("/generatelink", authMiddleware, generateLinkController);
+
+// Booking routes
+router.post("/booking/availability/", validateBooking, addBookingController);
 
 // --------------------------------------------
 

@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document, Types } from "mongoose";
-import baseFields, { IBaseFields } from "./basefieldsSchema";
+import baseFields, { IBaseFields } from "./basefieldSchema";
 
 // -------------------------------------------------------------------
 
@@ -34,4 +34,5 @@ const availabilitySchema = new Schema<IAvailability>({
     ...baseFields
 });
 
-export const Availability = mongoose.model<IAvailability>("Availability", availabilitySchema);
+const Availability = mongoose.model<IAvailability>("Availability", availabilitySchema);
+export default Availability;

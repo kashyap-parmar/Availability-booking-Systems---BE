@@ -1,11 +1,12 @@
 import mongoose, { Schema, Types } from "mongoose";
-import baseFields, { IBaseFields } from "./basefieldsSchema";
+import baseFields, { IBaseFields } from "./basefieldSchema";
 
 // -------------------------------------------------------------------
 
 export interface IBooking extends Document, IBaseFields {
     availabilityId: Types.ObjectId;
-    bookedBy?: Types.ObjectId;
+    guestEmail: string;
+    guestName: string;
 }
 
 // -------------------------------------------------------------------
@@ -21,14 +22,19 @@ const bookingSchema = new Schema<IBooking>({
         required: true,
         unique: true,
     },
-
-    bookedBy: {
-        type: ObjectId,
-        ref: "User",
-        default: null,
+    guestEmail: {
+        type: String,
+        trim: true,
+        required: true,
     },
-
+    guestName: {
+        type: String,
+        trim: true,
+        required: true,
+        default: "unknown",
+    },
     ...baseFields,
 });
 
-export const Booking = mongoose.model<IBooking>("Booking", bookingSchema);
+const Booking = mongoose.model<IBooking>("Booking", bookingSchema);
+export default Booking;

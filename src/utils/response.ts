@@ -22,7 +22,7 @@ type ResponseType = SuccessResponse | ErrorResponse;
 
 // -----------------------------------------------------
 
-export const sendSuccessResponse = (params: ResponseType) => {
+export const sendResponse = (params: ResponseType) => {
 
     const { res, status, message, statusCode } = params;
 
