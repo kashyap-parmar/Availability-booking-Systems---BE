@@ -78,7 +78,7 @@ index.ts
 ### 1. Clone repo
 
 ```bash
-git clone <your-backend-repo-url>
+git clone https://github.com/kashyap-parmar/Availability-booking-Systems---BE.git
 cd backend
 ```
 
