@@ -60,15 +60,15 @@ It handles:
 ## 📂 Project Structure
 
 ```
-src/controllers
-   /database
-   /middleware
-   /services
-   /types
-   /utils
-   /validations
-   routes.ts
-   index.ts
+/controllers
+/database
+/middleware
+/services
+/types
+/utils
+/validations
+routes.ts
+index.ts
 ```
 
 ---
