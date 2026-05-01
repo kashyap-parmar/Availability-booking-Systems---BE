@@ -79,7 +79,7 @@ index.ts
 
 ```bash
 git clone https://github.com/kashyap-parmar/Availability-booking-Systems---BE.git
-cd backend
+cd Availability-booking-Systems---BE
 ```
 
 ---
