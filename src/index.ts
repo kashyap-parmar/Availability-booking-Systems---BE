@@ -20,10 +20,10 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json()); // parse JSON
 app.use(express.urlencoded({ extended: true })); // parse URL-encoded
 app.use(helmet());
-// app.use(cors({
-//     origin: process.env.CORS_ORIGIN || "http://localhost:3000",
-//     credentials: true,
-// }));
+app.use(cors({
+    origin: process.env.CORS_ORIGIN || "http://localhost:3000",
+    credentials: true,
+}));
 
 
 /* ---------- Database Connection ---------- */

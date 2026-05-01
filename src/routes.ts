@@ -5,7 +5,8 @@ import {
     addAvailabilityController,
     getAvailabilityController,
     addBookingController,
-    generateLinkController
+    generateLinkController,
+    getUserByIdController
 } from "./controller";
 import {
     validateBooking,
@@ -24,6 +25,9 @@ const router = Router();
 // Authentication
 router.post("/register", validateRegister, registerController);
 router.post("/login", validateLogin, loginController);
+
+// 
+router.get("/user/:id", authMiddleware, getUserByIdController);
 
 // Availability routes
 router.post("/availability/user/:id", authMiddleware, validateAvailability, addAvailabilityController);

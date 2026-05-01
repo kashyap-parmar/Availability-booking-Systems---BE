@@ -12,8 +12,7 @@ export const addAvailabilityController = async (req: Request, res: Response, nex
 
         const availabilityData = await addAvailabilityService({
             userId: new Types.ObjectId(userId),
-            startTime: new Date(req.body.startTime),
-            endTime: new Date(req.body.endTime)
+            slots: req.body
         });
 
         return sendResponse({

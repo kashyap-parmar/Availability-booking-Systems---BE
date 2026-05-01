@@ -7,32 +7,37 @@ import { BookingLinkModel } from "../database/model";
 
 export const addAvailabilityService = async ({
     userId,
-    startTime,
-    endTime
+    slots,
 }: {
     userId: Types.ObjectId;
-    startTime: Date;
-    endTime: Date;
+    slots: { startTime: Date; endTime: Date }[];
 }) => {
     const userExists = await UserModel.findById(userId);
 
     if (!userExists) throw new AppError("User not found", 404);
 
-    const exists = await AvailabilityModel.findOne({
-        userId,
-        startTime: { $lt: endTime },
-        endTime: { $gt: startTime }
-    });
+    for (const slot of slots) {
+        const exists = await AvailabilityModel.findOne({
+            userId,
+            startTime: { $lt: slot.endTime },
+            endTime: { $gt: slot.startTime },
+        });
 
-    if (exists) {
-        throw new Error("Time slot already exists or overlaps");
+        if (exists) {
+            throw new AppError(
+                "This slot is already booked or overlaps with an existing slot",
+                400
+            );
+        }
     }
 
-    const availability = await AvailabilityModel.create({
+    const formattedSlots = slots.map((slot) => ({
         userId,
-        startTime,
-        endTime
-    });
+        startTime: slot.startTime,
+        endTime: slot.endTime,
+    }));
+
+    const availability = await AvailabilityModel.insertMany(formattedSlots);
 
     return availability;
 };
@@ -44,24 +49,52 @@ export const getAvailabilityService = async (linkId: string) => {
 
     const user = await UserModel.findById(link.userId).lean();
 
-    const availability = await AvailabilityModel.find({
-        _id: { $in: link.availabilityIds },
-        isDeleted: false
-    }).lean();
+    const availability = await AvailabilityModel.aggregate([
+        {
+            $match: {
+                _id: { $in: link.availabilityIds },
+                isDeleted: false,
+            }
+        },
+
+        {
+            $group: {
+                _id: {
+                    $dateToString: {
+                        format: "%Y-%m-%d",
+                        date: "$startTime"
+                    }
+                },
+                slots: { $push: "$$ROOT" }
+            }
+        },
+
+        {
+            $sort: { _id: 1 }
+        }
+    ]);
 
     const booked = await BookingModel.find({
         availabilityId: { $in: link.availabilityIds }
     }).select("availabilityId");
 
-    const bookedIds = booked.map(b => b.availabilityId.toString());
-
-    const availableSlots = availability.filter(
-        slot => !bookedIds.includes(slot._id.toString())
+    const bookedSet = new Set(
+        booked.map(b => b.availabilityId.toString())
     );
+
+    const filtered = availability.map(group => {
+        return {
+            ...group,
+            slots: group.slots.filter((slot: any) => !bookedSet.has(slot._id.toString())
+            )
+        };
+    });
+
+    const finalData = filtered.filter(group => group.slots.length > 0);
 
     return {
         user,
-        availability: availableSlots
+        availability: finalData
     };
 };
 

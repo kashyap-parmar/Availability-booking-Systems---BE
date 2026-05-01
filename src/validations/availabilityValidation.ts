@@ -28,24 +28,17 @@ const validateAvailability = (
         return value;
     };
 
-    const availabilitySchema = Joi.object({
-        startTime: Joi.string()
-            .required()
-            .custom(strictDate)
-            .messages({
-                "date.invalid": "Invalid startTime date"
-            }),
-
-        endTime: Joi.string()
-            .required()
-            .custom(strictDate)
-            .messages({
-                "date.invalid": "Invalid endTime date"
-            })
-    })
-        .custom((value, helpers) => {
+    const availabilitySchema = Joi.array().items(
+        Joi.object({
+            startTime: Joi.string().isoDate().required(),
+            endTime: Joi.string().isoDate().required(),
+        }).custom((value, helpers) => {
             const start = new Date(value.startTime);
             const end = new Date(value.endTime);
+
+            if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+                return helpers.error("date.invalid");
+            }
 
             if (end <= start) {
                 return helpers.error("date.order");
@@ -53,9 +46,11 @@ const validateAvailability = (
 
             return value;
         })
-        .messages({
-            "date.order": "End time must be greater than start time"
-        });
+    ).messages({
+        "array.base": "Payload must be an array",
+        "date.order": "End time must be greater than start time",
+        "date.invalid": "Invalid date format",
+    });
 
     const { error, value } = availabilitySchema.validate(req.body, {
         abortEarly: false,
