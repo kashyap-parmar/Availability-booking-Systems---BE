@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import { sendResponse } from "../utils/response";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { VALIDATION_FAILED } from "../utils/constants";
 dayjs.extend(customParseFormat);
 
 // --------------------------------------------
@@ -15,18 +16,6 @@ const validateAvailability = (
     res: Response,
     next: NextFunction
 ) => {
-
-    const isoFormat = "YYYY-MM-DDTHH:mm:ss[Z]";
-
-    const strictDate = (value: string, helpers: any) => {
-        const isValid = dayjs(value, isoFormat, true).isValid();
-
-        if (!isValid) {
-            return helpers.error("date.invalid");
-        }
-
-        return value;
-    };
 
     const availabilitySchema = Joi.array().items(
         Joi.object({
@@ -66,7 +55,7 @@ const validateAvailability = (
         return sendResponse({
             res,
             statusCode: 400,
-            message: "Validation failed",
+            message: VALIDATION_FAILED,
             status: 'error',
             error: errors
         })

@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { Types } from "mongoose";
 import { getUserByIdService } from "../services";
 import { sendResponse } from "../utils/response";
+import { USER_RETRIEVED_SUCCESSFULLY } from "../utils/constants";
 
 // ---------------------------------------------------------------
 
@@ -22,7 +23,7 @@ export const getUserByIdController = async (
             res,
             status: "success",
             statusCode: 200,
-            message: "User retrieved successfully",
+            message: USER_RETRIEVED_SUCCESSFULLY,
             data: user
         })
     } catch (err) {

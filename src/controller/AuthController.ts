@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { register, login } from "../services";
 import { sendResponse } from "../utils/response";
+import { USER_LOGGED_IN_SUCCESSFULLY, USER_REGISTERED_SUCCESSFULLY } from "../utils/constants";
 
 // ---------------------------------------------------------------
 
@@ -12,7 +13,7 @@ export const registerController = async (req: Request, res: Response, next: Next
             res,
             status: 'success',
             statusCode: 201,
-            message: "User registered successfully",
+            message: USER_REGISTERED_SUCCESSFULLY,
             data: result
         })
 
@@ -29,7 +30,7 @@ export const loginController = async (req: Request, res: Response, next: NextFun
             res,
             status: 'success',
             statusCode: 200,
-            message: "User logged in successfully",
+            message: USER_LOGGED_IN_SUCCESSFULLY,
             data: result
         })
 

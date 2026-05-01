@@ -2,6 +2,7 @@ import { Types } from "mongoose";
 import { Request, Response, NextFunction } from "express";
 import { generateLinkService } from "../services";
 import { sendResponse } from "../utils/response";
+import { BOOKING_LINK_GENERATED_SUCCESSFULLY } from "../utils/constants";
 
 // --------------------------------------------------------------------
 
@@ -12,7 +13,6 @@ export const generateLinkController = async (
 ) => {
     try {
         const userId = (req as any)?.user?.userId;
-        console.log("Generating link for user:", userId);
 
         const result = await generateLinkService({
             userId: new Types.ObjectId(userId)
@@ -22,7 +22,7 @@ export const generateLinkController = async (
             res,
             statusCode: 201,
             status: "success",
-            message: "Booking link generated successfully",
+            message: BOOKING_LINK_GENERATED_SUCCESSFULLY,
             data: result
         })
 

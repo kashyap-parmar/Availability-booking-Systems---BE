@@ -1,5 +1,6 @@
 import { UserModel } from "../database/model";
 import { AppError } from "../utils/appError";
+import { INVALID_CREDENTIALS, USER_ALREADY_EXISTS } from "../utils/constants";
 import { comparePassword, hashPassword } from "../utils/encription";
 import { generateToken } from "../utils/jwt";
 
@@ -14,7 +15,7 @@ export const register = async (payload: {
 }) => {
     const exists = await UserModel.findOne({ email: payload.email });
 
-    if (exists) throw new AppError("User already exists", 400);
+    if (exists) throw new AppError(USER_ALREADY_EXISTS, 400);
 
     const hashedPassword = await hashPassword(payload.password);
 
@@ -37,11 +38,11 @@ export const login = async (payload: {
 
     const userExists = await UserModel.findOne({ email: payload.email });
 
-    if (!userExists) throw new AppError("Invalid credentials", 401);
+    if (!userExists) throw new AppError(INVALID_CREDENTIALS, 401);
 
     const isMatch = await comparePassword(payload.password, userExists.password);
 
-    if (!isMatch) throw new AppError("Invalid credentials", 401);
+    if (!isMatch) throw new AppError(INVALID_CREDENTIALS, 401);
 
     const { password, __v, ...user } = userExists.toObject();
 

@@ -2,6 +2,7 @@ import { Types } from "mongoose";
 import { NextFunction, Request, Response } from "express";
 import { addAvailabilityService, getAvailabilityService } from "../services";
 import { sendResponse } from "../utils/response";
+import { AVAILABILITY_ADDED_SUCCESSFULLY, AVAILABILITY_RETRIEVED_SUCCESSFULLY } from "../utils/constants";
 
 // ---------------------------------------------------------------
 
@@ -20,7 +21,7 @@ export const addAvailabilityController = async (req: Request, res: Response, nex
             statusCode: 201,
             data: availabilityData,
             status: "success",
-            message: "Availability added successfully"
+            message: AVAILABILITY_ADDED_SUCCESSFULLY
         });
 
     } catch (err: any) {
@@ -40,7 +41,7 @@ export const getAvailabilityController = async (req: Request, res: Response, nex
             statusCode: 200,
             data: availabilityData,
             status: "success",
-            message: "Availability retrieved successfully"
+            message: AVAILABILITY_RETRIEVED_SUCCESSFULLY
         });
 
     } catch (err: any) {

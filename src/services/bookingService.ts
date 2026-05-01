@@ -1,6 +1,7 @@
 import mongoose, { Types } from "mongoose";
 import { BookingModel } from "../database/model";
 import { AppError } from "../utils/appError";
+import { SLOT_ARE_BOOKED } from "../utils/constants";
 
 // -------------------------------------------------------------
 
@@ -14,8 +15,8 @@ export const addBookingService = async ({
     guestName: string;
 }) => {
 
-    // const session = await mongoose.startSession();
-    // session.startTransaction();
+    const session = await mongoose.startSession();
+    session.startTransaction();
 
     try {
         const bookingDocs = availabilityIds.map((id) => ({
@@ -25,21 +26,21 @@ export const addBookingService = async ({
         }));
 
         const bookings = await BookingModel.insertMany(bookingDocs, {
-            // session,
-            ordered: true // all-or-nothing
+            session,
+            ordered: true
         });
 
-        // await session.commitTransaction();
-        // session.endSession();
+        await session.commitTransaction();
+        session.endSession();
 
         return bookings;
 
     } catch (err: any) {
-        // await session.abortTransaction();
-        // session.endSession();
+        await session.abortTransaction();
+        session.endSession();
 
         if (err.code === 11000) {
-            throw new AppError("One or more slots are already booked", 400);
+            throw new AppError(SLOT_ARE_BOOKED, 400);
         }
 
         throw err;

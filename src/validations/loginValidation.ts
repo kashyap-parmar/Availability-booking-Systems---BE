@@ -1,6 +1,7 @@
 import Joi from "joi";
 import { Request, Response, NextFunction } from "express";
 import { sendResponse } from "../utils/response";
+import { VALIDATION_FAILED } from "../utils/constants";
 
 // --------------------------------------------
 
@@ -41,7 +42,7 @@ const validateLogin = (
         return sendResponse({
             res,
             statusCode: 400,
-            message: "Validation failed",
+            message: VALIDATION_FAILED,
             status: 'error',
             error: errors
         })

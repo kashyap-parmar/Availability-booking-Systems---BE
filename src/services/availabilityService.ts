@@ -2,6 +2,7 @@ import { Types } from "mongoose";
 import { UserModel, AvailabilityModel, BookingModel } from "../database/model";
 import { AppError } from "../utils/appError";
 import { BookingLinkModel } from "../database/model";
+import { SLOT_ALREADY_BOOKED, THE_LINK_IS_INVALID, USER_NOT_FOUND } from "../utils/constants";
 
 // -------------------------------------------------------------
 
@@ -14,7 +15,7 @@ export const addAvailabilityService = async ({
 }) => {
     const userExists = await UserModel.findById(userId);
 
-    if (!userExists) throw new AppError("User not found", 404);
+    if (!userExists) throw new AppError(USER_NOT_FOUND, 404);
 
     for (const slot of slots) {
         const exists = await AvailabilityModel.findOne({
@@ -25,7 +26,7 @@ export const addAvailabilityService = async ({
 
         if (exists) {
             throw new AppError(
-                "This slot is already booked or overlaps with an existing slot",
+                SLOT_ALREADY_BOOKED,
                 400
             );
         }
@@ -45,7 +46,7 @@ export const addAvailabilityService = async ({
 export const getAvailabilityService = async (linkId: string) => {
     const link = await BookingLinkModel.findOne({ linkId });
 
-    if (!link) throw new Error("Invalid link");
+    if (!link) throw new Error(THE_LINK_IS_INVALID);
 
     const user = await UserModel.findById(link.userId).lean();
 
